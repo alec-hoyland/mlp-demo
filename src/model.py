@@ -3,6 +3,8 @@ Describes the model architecture and utility functions.
 """
 
 
+from typing import Tuple
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -11,12 +13,15 @@ from torch.optim import Optimizer
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import datasets
-from typing import Tuple
-import matplotlib.pyplot as plt
 
 
 # Define the model architecture
 class Net(nn.Module):
+    """
+    2-layer fully-connected neural network
+    with dropout and ReLU activation functions.
+    784 -> 512 -> 512 -> 10 dimensions.
+    """
     def __init__(self) -> None:
         super(Net, self).__init__()
 
@@ -224,5 +229,3 @@ if __name__ == "__main__":
 
     ## Test the model
     test(model=model, loss_function=loss)
-
-    ## Visualize
