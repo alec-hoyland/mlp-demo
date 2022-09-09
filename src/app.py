@@ -2,18 +2,21 @@
 Streamlit app
 """
 
+from typing import Tuple
+
+import matplotlib.pyplot as plt
+import numpy as np
 import streamlit as st
 import torch
 import torchvision
 import torchvision.transforms as transforms
-from streamlit_drawable_canvas import st_canvas
-from typing import Tuple
 from PIL import Image, ImageOps
-import numpy as np
+from streamlit_drawable_canvas import st_canvas
+
 import model as nnet
-import matplotlib.pyplot as plt
 
 st.title("Neural Network Demo")
+
 
 @st.cache
 def load_model() -> nnet.Net:
@@ -30,8 +33,9 @@ def load_model() -> nnet.Net:
     """
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model = nnet.Net().to(device)
-    model.load_state_dict(torch.load("src/model.pt", map_location=torch.device('cpu')))
+    model.load_state_dict(torch.load("src/model.pt", map_location=torch.device("cpu")))
     return model
+
 
 def do_transform(x: np.ndarray) -> torch.Tensor:
     """
@@ -47,7 +51,7 @@ def do_transform(x: np.ndarray) -> torch.Tensor:
     torch.Tensor
     """
 
-    img = Image.fromarray(x.astype('uint8'), 'RGBA')
+    img = Image.fromarray(x.astype("uint8"), "RGBA")
     img = ImageOps.grayscale(img)
 
     transform = transforms.Compose(
@@ -58,6 +62,7 @@ def do_transform(x: np.ndarray) -> torch.Tensor:
     )
     return transform(img)
 
+
 def predict(input: np.ndarray, model: nnet.Net) -> Tuple[int, torch.Tensor]:
     """
     Given an image and a model, makes a prediction
@@ -67,7 +72,7 @@ def predict(input: np.ndarray, model: nnet.Net) -> Tuple[int, torch.Tensor]:
     ---------
     input : np.ndarray
         The w x h image in grayscale
-    
+
     model : nnet.Net
 
     Returns
@@ -83,6 +88,7 @@ def predict(input: np.ndarray, model: nnet.Net) -> Tuple[int, torch.Tensor]:
 
     return y_hat, output
 
+
 model_load_state = st.text("Loading PyTorch model...")
 model = load_model()
 model_load_state.text("PyTorch model loaded!")
@@ -93,11 +99,11 @@ canvas_output = st_canvas(
     stroke_width=20,
     stroke_color="#FFFFFF",
     background_color="#000000",
-    height=4*28,
-    width=4*28,
+    height=4 * 28,
+    width=4 * 28,
     drawing_mode="freedraw",
     key="canvas",
-    display_toolbar=True
+    display_toolbar=True,
 )
 
 if st.button("Predict!"):
