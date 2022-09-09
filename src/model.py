@@ -20,7 +20,7 @@ class Net(nn.Module):
     """
     2-layer fully-connected neural network
     with dropout and ReLU activation functions.
-    784 -> 512 -> 512 -> 10 dimensions.
+    784 -> 512 -> 128 -> 10 dimensions.
     """
 
     def __init__(self) -> None:
@@ -28,10 +28,10 @@ class Net(nn.Module):
 
         # linear layer 784 -> 512
         self.fc1 = nn.Linear(784, 512)
-        # linear layer 512 -> 512
-        self.fc2 = nn.Linear(512, 512)
-        # linear layer 512 -> 10
-        self.fc3 = nn.Linear(512, 10)
+        # linear layer 512 -> 128
+        self.fc2 = nn.Linear(512, 128)
+        # linear layer 128 -> 10
+        self.fc3 = nn.Linear(128, 10)
 
         # dropout layer
         self.dropout = nn.Dropout(0.2)
@@ -57,7 +57,7 @@ class Net(nn.Module):
         return self.layers(x)
 
     def predict(self, x: torch.Tensor) -> Tuple[int, torch.Tensor]:
-        output = self.forward(x)
+        output = torch.nn.functional.softmax(self.forward(x), dim=1)
         _, y_hat = torch.max(output, 1)
         return y_hat, output
 
@@ -224,10 +224,10 @@ if __name__ == "__main__":
     loss = nn.CrossEntropyLoss()
 
     ## Optimizer
-    optimizer = torch.optim.AdamW(model.parameters(), lr=0.01)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
 
     ## Train the model
     train(model=model, loss_function=loss, optimizer=optimizer, n_epochs=50)
 
     ## Test the model
-    test(model=model, loss_function=loss)
+    test(model=model, loss_function=nn.NLLLoss())
