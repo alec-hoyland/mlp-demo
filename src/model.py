@@ -56,7 +56,7 @@ class Net(nn.Module):
         x = x.view(-1, 784)
         return self.layers(x)
 
-    def inference(self, x: torch.Tensor) -> Tuple[int, torch.Tensor]:
+    def predict(self, x: torch.Tensor) -> Tuple[int, torch.Tensor]:
         output = self.forward(x)
         _, y_hat = torch.max(output, 1)
         return y_hat, output
@@ -128,7 +128,7 @@ def test(model: nn.Module, loss_function: nn.Module) -> None:
 
     model.eval()
     for data, target in test_loader:
-        y_hat, output = model.inference(data)
+        y_hat, output = model.predict(data)
 
         # compute and save the loss
         loss = loss_function(output, target)
