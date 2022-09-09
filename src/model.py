@@ -22,6 +22,7 @@ class Net(nn.Module):
     with dropout and ReLU activation functions.
     784 -> 512 -> 512 -> 10 dimensions.
     """
+
     def __init__(self) -> None:
         super(Net, self).__init__()
 
@@ -167,6 +168,7 @@ def test(model: nn.Module, loss_function: nn.Module) -> None:
             np.sum(class_total),
         )
     )
+
 
 if __name__ == "__main__":
 
