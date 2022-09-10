@@ -15,7 +15,7 @@ with ReLU activations and dropout
 trained on the MNIST image classification task.
 
 The MNIST dataset contains `28 x 28` grayscale images
-of handwritten digits
+of handwritten digits.
 
 ![](https://pic3.zhimg.com/v2-60f89b96a9ab8fcacfaa735c0d3b713c_1200x500.jpg)
 
@@ -27,3 +27,5 @@ and a softmax operation normalized the logits after the output layer.
 
 A [streamlit app](https://alec-hoyland-mlp-demo-srcapp-auyr4z.streamlitapp.com/) provides an interactive demo
 for testing the model on new user input.
+
+![](gfx/streamlit-screenshot.png)
