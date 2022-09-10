@@ -2,10 +2,11 @@
 Streamlit app
 """
 
-from typing import Tuple
+from typing import Iterable, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 import streamlit as st
 import torch
 import torchvision
@@ -63,6 +64,16 @@ def do_transform(x: np.ndarray) -> torch.Tensor:
     return transform(img)
 
 
+def plot_probs(output: Iterable):
+    fig = plt.figure(figsize=(3.2, 2.4))
+    ax = sns.barplot(x=list(range(len(output))), y=output)
+    plt.xlabel("digit")
+    plt.ylabel("probability")
+    plt.ylim((0, 1))
+    plt.title("model output")
+    return ax
+
+
 def predict(input: np.ndarray, model: nnet.Net) -> Tuple[int, torch.Tensor]:
     """
     Given an image and a model, makes a prediction
@@ -88,12 +99,13 @@ def predict(input: np.ndarray, model: nnet.Net) -> Tuple[int, torch.Tensor]:
 
     return y_hat, output
 
-
+st.subheader("Model Architecture")
 model_load_state = st.text("Loading PyTorch model...")
 model = load_model()
-model_load_state.text("PyTorch model loaded!")
+# model_load_state.text("PyTorch model loaded!")
+model_load_state.text(model)
 
-st.subheader("Please draw a number on the canvas.")
+st.subheader("Please draw a digit on the canvas.")
 canvas_output = st_canvas(
     fill_color="#000000",
     stroke_width=20,
@@ -107,9 +119,11 @@ canvas_output = st_canvas(
 )
 
 if st.button("Predict!"):
+    st.subheader("Output")
     y, output = predict(canvas_output.image_data, model)
-    output = output.tolist()
+    output = output.tolist()[0]
     prob_dict = {i: np.round(output[i], decimals=2) for i in range(len(output))}
+    st.pyplot(plot_probs(output).figure)
     st.write("Probabilities are:")
     st.write(prob_dict)
     st.write(f"Best-guess prediction is: {int(y)}")
